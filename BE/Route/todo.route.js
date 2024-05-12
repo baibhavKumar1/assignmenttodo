@@ -4,7 +4,7 @@ const ProjectModel = require('../Model/project.model');
 const auth = require('../Middleware/auth');
 const TodoRouter = express.Router();
 
-TodoRouter.use(auth)
+// TodoRouter.use(auth)
 
 TodoRouter.get('/:project_id',async(req,res)=>{
     const {project_id} = req.params;
@@ -32,18 +32,19 @@ TodoRouter.post('/:project_id',async(req,res)=>{
 })
 
 TodoRouter.patch('/:id',async(req,res)=>{
+    console.log(req.body);
     try{
         const updated_todo = await TodoModel.findByIdAndUpdate(req.params.id,{...req.body},{new:true});
         res.status(200).json({message:"Todo Updated",todo:updated_todo})
     }catch(err){
         res.status(400).json({message:err.message})
     }
-})
+}) 
 
-TodoRouter.delete('/:id',async(req,res)=>{
+TodoRouter.delete('/:project_id/:id',async(req,res)=>{
     try{
-        await TodoRouter.findByIdAndDelete(req.params.id);
-        await ProjectModel.findByIdAndUpdate(req.body.project_id,{ $pull: { todos: req.params.id } })
+        await TodoModel.findByIdAndDelete(req.params.id);
+        await ProjectModel.findByIdAndUpdate(req.params.project_id,{ $pull: { todos: req.params.id } })
         res.status(200).json({message:"Todo deleted"})
     }catch(err){
         res.status(400).json({message:err.message})

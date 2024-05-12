@@ -34,7 +34,7 @@ const reducer = (state=init,{type,payload})=>{
     case GET_TODO_ERROR: return {...state, isLoading:false,isError:true}
 
     case UPDATE_TODO_REQUEST: return {...state, isLoading:true}
-    case UPDATE_TODO_SUCCESS: return {...state, isLoading:false,todos:payload.data.project.todos}
+    case UPDATE_TODO_SUCCESS: return {...state, isLoading:false}
     case UPDATE_TODO_ERROR: return {...state, isLoading:false,isError:true}
 
     case DELETE_TODO_REQUEST: return {...state, isLoading:true}

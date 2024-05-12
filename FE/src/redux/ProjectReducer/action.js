@@ -4,13 +4,15 @@ import { CREATE_PROJECT_ERROR, CREATE_PROJECT_REQUEST, CREATE_PROJECT_SUCCESS, C
 const userURL = import.meta.env.VITE_BACKEND_URL
 export const CreateProject = (title,token) => async (dispatch) => {
    dispatch({type:CREATE_PROJECT_REQUEST})
-   await axios.post(`${userURL}/project/` , title, {
+   console.log(title);
+   await axios.post(`${userURL}/project/` , {title}, {
       headers: {
           Authorization: `Bearer ${token}`
       }
   })
    .then((res)=>{
       dispatch({type:CREATE_PROJECT_SUCCESS,payload:res})
+      dispatch(GetProject(token))
       console.log(res);
    })
    .catch((err)=>{
@@ -51,7 +53,7 @@ export const GetSingleProject = (project_id,token) => async (dispatch) => {
          console.log("err", err)
       })
 }
-export const EditProject = (project_id,title,token) => async (dispatch) => {
+export const EditProject = (project_id,title,token) => async (dispatch) => { 
    dispatch({ type: EDIT_PROJECT_REQUEST })
    await axios.delete(`${userURL}/project/${project_id}`,title, {
       headers: {
@@ -100,16 +102,16 @@ export const GetTodos= (project_id,token)=>async(dispatch)=>{
          console.log("err", err)
       })
 }
-
 export const CreateTodo = (project_id,description,token) => async (dispatch) => {
    dispatch({type:CREATE_TODO_REQUEST})
-   await axios.post(`${userURL}/todo/` ,{description,project_id}, {
+   await axios.post(`${userURL}/todo/${project_id}` ,{description}, {
       headers: {
           Authorization: `Bearer ${token}`
       }
   })
    .then((res)=>{
       dispatch({type:CREATE_TODO_SUCCESS,payload:res})
+      dispatch(GetTodos(project_id,token))
       console.log(res);
    })
    .catch((err)=>{
@@ -117,15 +119,16 @@ export const CreateTodo = (project_id,description,token) => async (dispatch) => 
       console.log(err);
    })
 }
-export const UpdateTodo = (id,data,token) => async (dispatch) => {
+export const UpdateTodo = (project_id,id,{status},token) => async (dispatch) => {
    dispatch({type:UPDATE_TODO_REQUEST})
-   await axios.patch(`${userURL}/todo/${id}` ,{data,}, {
+   await axios.patch(`${userURL}/todo/${id}` ,{project_id,status}, {
       headers: {
           Authorization: `Bearer ${token}`
       }
   })
    .then((res)=>{
       dispatch({type:UPDATE_TODO_SUCCESS,payload:res})
+      dispatch(GetTodos(project_id,token))
       console.log(res);
    })
    .catch((err)=>{
@@ -133,15 +136,19 @@ export const UpdateTodo = (id,data,token) => async (dispatch) => {
       console.log(err);
    })
 }
-export const DeleteTodo = (id,token) => async (dispatch) => {
+export const DeleteTodo = (project_id,token,id) => async (dispatch) => {
    dispatch({type:DELETE_TODO_REQUEST})
-   await axios.delete(`${userURL}/todo/${id}`, {
+   await axios.delete(`${userURL}/todo/${project_id}/${id}`, {project_id}, {
       headers: {
           Authorization: `Bearer ${token}`
+      } ,
+      data: {
+         project_id: project_id
       }
   })
    .then((res)=>{
       dispatch({type:DELETE_PROJECT_SUCCESS,payload:res})
+      dispatch(GetTodos(project_id, token))
       console.log(res);
    })
    .catch((err)=>{

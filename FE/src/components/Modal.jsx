@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState } from 'react';
 import {useDispatch,useSelector} from 'react-redux'
-const Modal = ({ isOpen,setIsOpen, createProject,createTodo }) => {
+const Modal = ({ isOpen,setIsOpen, createProject,createTodo,project_id }) => {
 //   const [isOpen, setIsOpen] = useState(false);
 const token = useSelector((state)=>state.AuthReducer.token) || localStorage.getItem('token')
 const dispatch = useDispatch()
@@ -10,7 +10,7 @@ const [title,setTitle] = useState()
     if(createProject){
       dispatch(createProject(title,token))
     }else if(createTodo){
-      dispatch(createTodo(title,token))
+      dispatch(createTodo(project_id,title,token))
     }
     setIsOpen(false);
   };
@@ -32,20 +32,20 @@ const [title,setTitle] = useState()
                 <div className="sm:flex sm:items-start">
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
                     <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
-                      Add Project
+                      Add
                     </h3>
                     <div className="flex flex-col mt-2 text-black">
-                      <label className="text-sm">Title</label>
+                      <label className="text-sm">Heading</label>
                       <input onChange={(e)=>setTitle(e.target.value)} placeholder="Enter title..." className="border border-black rounded py-1 px-1.5 outline-none flex-1"/>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button onClick={closeModal} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm mb-2">
+                <button onClick={closeModal} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm ">
                   Submit
                 </button>
-                <button onClick={closeModal} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                <button onClick={()=>setIsOpen(false)} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
                   Close
                 </button>
               </div>

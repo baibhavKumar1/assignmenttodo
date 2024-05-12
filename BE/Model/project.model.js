@@ -2,6 +2,7 @@ const {Schema, model} = require('mongoose');
 
 const projectSchema = new Schema (
     {
+        user:{ type: Schema.Types.ObjectId, ref: 'User' },
         title:String,
         createdAt:{
             type:Date,
@@ -11,6 +12,6 @@ const projectSchema = new Schema (
     },{ versionKey: false}
 )
 
-const ProjectModel = model('project', projectSchema);
+const ProjectModel = model('Project', projectSchema);
 
 module.exports = ProjectModel
